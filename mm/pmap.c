@@ -189,7 +189,29 @@ void mips_vm_init()
 	are reference counted, and free pages are kept on a linked list.
   Hint:
 	Use `LIST_INSERT_HEAD` to insert something to list.*/
-void
+// void page_init(void){
+// 	LIST_INIT(&page_free_list);
+// 	freemem = ROUND(freemem,BY2PG);
+//
+// 	extern char end[];
+// 	u_long ans = u_long(end);
+// 	u_long timeshb = 0;
+// 	struct Page* anspage;
+//
+//
+// 	for(; ans < freemem; ans+=BY2PG,timeshb++){
+// 		anspage = (struct Page*)pa2page(PADDR(ans));
+// 		//if()?
+// 		anspage->pp_ref = 1;
+// 	}  
+//     for(; timeshb < npage; timeshb++,ans+=BY2PG){
+// 		anspage = (struct Page*)pa2page(PADDR(ans));
+// 		anspage->pp_ref = 0;
+// 		LIST_INSERT_HEAD(page_free_list,anspage,Page_LIST_entry_t);
+// 	}
+//
+// }
+// void
 page_init(void)
 {
 	struct Page *now;
@@ -260,7 +282,7 @@ void get_page_status(int pa)
 		}
 	}
 	printf("times:%d,page status:%d\n",exam_times,status);
-}
+}*/
 
 /*Overview:
 	Allocates a physical page from free memory, and clear this page.
