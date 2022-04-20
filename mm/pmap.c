@@ -141,9 +141,10 @@ static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)
 		}
 	}
 
-	pgtable = (Pte *) KADDR(PTE_ADDR(*pgdir_entryp)); // maybe step1's hint in wrong place
+	 // maybe step1's hint in wrong place
 
     /* Step 3: Get the page table entry for `va`, and return it. */
+	pgtable = (Pte *) KADDR(PTE_ADDR(*pgdir_entryp));
 	pgtable_entry = pgtable + PTX(va);
 	return pgtable_entry;
 }
