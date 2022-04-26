@@ -16,37 +16,8 @@ Pde *boot_pgdir;
 struct Page *pages;
 static u_long freemem;
 
-struct Page_list page_free_list;	/* Free list of physical pages */
+static struct Page_list page_free_list;	/* Free list of physical pages */
 
-void count_page(Pde *pgdir, int *cnt,int size)
-{
-	Pde *pgdir_entry;
-	Pte *pgtab, *pgtab_entry;
-	int i, j;
-	for (i = 0; i < size; i++)
-	{
-		cnt[i] = 0;
-	}
-	cnt[PPN(PADDR(pgdir))]++;
-	for (i = 0; i < PTE2PT; i++)
-	{
-		pgdir_entry = pgdir + i;
-		if((*pgdir_entry)&PTE_V)
-		{
-			cnt[PPN(*pgdir_entry)]++;
-			pgtab = KADDR(PTE_ADDR(*pgdir_entry));
-			for (j = 0; j < PTE2PT; j++)
-			{
-				pgtab_entry = pgtab + j;
-				if((*pgtab_entry)&PTE_V)
-				{
-					cnt[PPN(*pgtab_entry)]++;
-				}
-			}
-		}
-	}
-	return;
-}
 
 /* Overview:
  	Initialize basemem and npage.
@@ -139,12 +110,11 @@ static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)
 		{
 			return 0;
 		}
-	}
+	} //
 
-	 // maybe step1's hint in wrong place
+	pgtable = (Pte *) KADDR(PTE_ADDR(*pgdir_entryp)); // maybe step1's hint in wrong place
 
     /* Step 3: Get the page table entry for `va`, and return it. */
-	pgtable = (Pte *) KADDR(PTE_ADDR(*pgdir_entryp));
 	pgtable_entry = pgtable + PTX(va);
 	return pgtable_entry;
 }
@@ -170,7 +140,7 @@ void boot_map_segment(Pde *pgdir, u_long va, u_long size, u_long pa, int perm)
 	for (i = 0; i < size; i += BY2PG)
 	{
 		pgtable_entry = boot_pgdir_walk(pgdir, va+i, 1);
-		*pgtable_entry = PTE_ADDR(pa) | (perm | PTE_V);
+		*pgtable_entry = PTE_ADDR(pa+i) | (perm | PTE_V);
 	}
 }
 
@@ -210,6 +180,7 @@ void mips_vm_init()
     envs = (struct Env *)alloc(NENV * sizeof(struct Env), BY2PG, 1);
     n = ROUND(NENV * sizeof(struct Env), BY2PG);
     boot_map_segment(pgdir, UENVS, n, PADDR(envs), PTE_R);
+	// printf("to memory %x for strut Envs.\n", freemem); // by myself.
 
     printf("pmap.c:\t mips vm init success\n");
 }

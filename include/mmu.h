@@ -19,7 +19,7 @@
 #define PDSHIFT		22		// log2(PDMAP)
 #define PDX(va)		((((u_long)(va))>>22) & 0x03FF)
 #define PTX(va)		((((u_long)(va))>>12) & 0x03FF)
-#define PTE_ADDR(pte)	((u_long)(pte)&~0xFFF)
+#define PTE_ADDR(pte)	((u_long)(pte)&~0xFFF) 
 
 // page number field of address
 #define PPN(va)		(((u_long)(va))>>12)
