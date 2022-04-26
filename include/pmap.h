@@ -6,7 +6,9 @@
 #include "mmu.h"
 #include "printf.h"
 
-void count_page(Pde *pgdir, int *cnt, int size);
+void test_queue();
+void pm_check();
+void get_page_status(int);
 
 LIST_HEAD(Page_list, Page);
 typedef LIST_ENTRY(Page) Page_LIST_entry_t;
@@ -35,7 +37,7 @@ page2ppn(struct Page *pp)
 static inline u_long
 page2pa(struct Page *pp)
 {
-	return page2ppn(pp) << PGSHIFT;
+	return page2ppn(pp) << PGSHIFT; //乘页面大小
 }
 
 /* Get the Page struct whose physical address is 'pa'.
